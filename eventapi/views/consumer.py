@@ -16,15 +16,12 @@ class ConsumerAPI(MethodView):
         consumer.subscribe(['login', 'logout', 'viewpage'])
 
         def eventStream():
-            try:
-                while(True):
-                    for msg in consumer:
-                        print(msg)
-                        yield(
-                            "event: {}Event\n".format(msg.topic) +
-                            "data: {}\n\n".format(msg.value.decode()))
-                    time.sleep(1)
-            finally:
-                print ("Stream closed")
+            while(True):
+                for msg in consumer:
+                    print(msg)
+                    yield(
+                        "event: {}Event\n".format(msg.topic) +
+                        "data: {}\n\n".format(msg.value.decode()))
+                time.sleep(1)
 
         return Response(eventStream(), mimetype="text/event-stream")
